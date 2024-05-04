@@ -9,46 +9,63 @@
 
 Objects::Objects() {
     Objects::speedObjects = -2.5f;
-}
-Objects::Objects(int x, int y, sf::Texture& texture) {
-    if(!texture.loadFromFile("sprites\\block.png")){
+    if(!texture1.loadFromFile("sprites\\cactus1.png")){
         return;
     }
+    if(!texture2.loadFromFile("sprites\\cactus2.png")){
+        return;
+    }
+    if(!texture3.loadFromFile("sprites\\cactus3.png")){
+        return;
+    }
+}
+Objects::Objects(sf::Texture& texture) {
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (100, 100, x, y));
-    sprite.setPosition(Window::getXSize()+50,Window::getYSize()/2);
+    sprite.setPosition(Window::getXSize()+50,Window::getYSize()/2-8);
 }
 
-void Objects::update(std::vector<Objects>& objVec) {
-    int randomNum = (rand() % 3) + 1;
-    switch (randomNum) {
-         case 1:
-            objVec.emplace_back(Objects(30, 60, texture));
-            break;
-         case 2:
-            objVec.emplace_back(Objects(30, 40, texture));
-            break;
-         case 3:
-            objVec.emplace_back(Objects(20, 30, texture));
-            break;
+void Objects::spawn(std::vector<Objects>& objVec,  bool& isSpawned) {
+    if(isSpawned) {
+        int randomNum = (rand() % 3) + 1;
+        switch (randomNum) {
+            case 1:
+                objVec.emplace_back(Objects(texture1));
+                break;
+            case 2:
+                objVec.emplace_back(Objects(texture2));
+                break;
+            case 3:
+                objVec.emplace_back(Objects(texture3));
+                break;
         }
+    }
 
 }
 
-void Objects::objectMove(std::vector<Objects>& objVec) {
-    for (int i = 0; i < objVec.size(); ++i) {
-        objVec[i].sprite.move(speedObjects,0);
+void Objects::objectMove(std::vector<Objects>& objVec, bool& isSpawned) {
+    if (isSpawned) {
+        for (int i = 0; i < objVec.size(); ++i) {
+            objVec[i].sprite.move(speedObjects, 0);
 
-        if(objVec[i].sprite.getPosition().x < -50){
-            auto iter = objVec.begin() + i;
-            objVec.erase(iter);
+            if (objVec[i].sprite.getPosition().x < -150) {
+                objVec[i].isDeleted = true;
+            }
+
+            if(isDeleted){
+                auto iter = objVec.begin() + i;
+                objVec.erase(iter);
+            }
         }
     }
 }
 
-void Objects::draw(sf::RenderWindow& window, std::vector<Objects>& objVec) {
-    for (int i = 0; i < objVec.size(); ++i) {
-        window.draw(objVec[i].sprite);
+void Objects::draw(sf::RenderWindow& window, std::vector<Objects>& objVec, bool& isSpawned) {
+    if (isSpawned) {
+        for (int i = 0; i < objVec.size(); ++i) {
+            if (!objVec[i].isDeleted) {
+                window.draw(objVec[i].sprite);
+            }
+        }
     }
 }
 

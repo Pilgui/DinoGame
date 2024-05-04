@@ -7,11 +7,11 @@
 
 
 Dino::Dino() : jumpSpeed(-5.0f){
-    if(!texture.loadFromFile("sprites\\texture.png")){
+    if(!texture.loadFromFile("sprites\\dino.png")){
         return;
     }
     sprite.setTexture(texture);
-    sprite.setTextureRect(sf::IntRect (100,100,20,40));
+//    sprite.setTextureRect(sf::IntRect (100,100,20,40));
     sprite.setPosition(Window::getXSize()-450,Window::getYSize()/2);
 }
 

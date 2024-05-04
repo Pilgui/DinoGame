@@ -30,5 +30,11 @@ add_executable(DinoProject main.cpp
         restartButton.cpp
         restartButton.h
         Window.cpp
-        Window.h)
+        Window.h
+        Ground.cpp
+        Ground.h
+        Cloud.cpp
+        Cloud.h
+        Bird.cpp
+        Bird.h)
 target_link_libraries(DinoProject fmt sfml-graphics)

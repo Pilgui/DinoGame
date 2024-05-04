@@ -10,10 +10,10 @@
 class Objects {
 public:
     Objects();
-    Objects(int x ,int y,  sf::Texture& texture);
-    void objectMove(std::vector<Objects>& objVec);
-    void draw(sf::RenderWindow& window, std::vector<Objects>& objVec);
-    void update(std::vector<Objects>& objVec);
+    Objects(sf::Texture& texture);
+    void objectMove(std::vector<Objects>& objVec, bool& isSpawned);
+    void draw(sf::RenderWindow& window, std::vector<Objects>& objVec, bool& isSpawned);
+    void spawn(std::vector<Objects>& objVec,  bool& isSpawned);
     sf::Sprite getSprite();
     void setSpeedObj(float val);
     float getObjSpeed();
@@ -22,8 +22,12 @@ private:
 
     Dino dino;
     float speedObjects;
-    sf::Texture texture;
+    sf::Texture texture1;
+    sf::Texture texture2;
+    sf::Texture texture3;
     sf::Sprite sprite;
+
+    bool isDeleted = false;
 };
 
 

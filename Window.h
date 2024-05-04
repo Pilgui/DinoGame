@@ -8,6 +8,9 @@
 #include "Dino.h"
 #include "restartButton.h"
 #include "Objects.h"
+#include "Ground.h"
+#include "Cloud.h"
+#include "Bird.h"
 
 class Window {
 public:
@@ -27,21 +30,35 @@ private:
     sf::Event event;
     sf::RenderWindow window;
 
-    static unsigned const int xSize;
-    static unsigned const int ySize;
-    bool isTrueJump;
-    void dinoJump();
+    Ground ground;
+    std::vector<Ground> groundVec;
+
+    Cloud cloud;
+    std::vector<Cloud> cloudVec;
+
+    Bird bird;
+    std::vector<Bird> birdVec;
+
     sf::Text scoreText;
     sf::Text gameOverText;
     sf::Font font;
+
+    static unsigned const int xSize;
+    static unsigned const int ySize;
+    void dinoJump();
+
     bool isGame;
+    bool isTrueJump;
+    bool isBirdSpawn;
+    bool isObjSpawned;
+
     void declareScore();
-    void restartGame();
     void declareGameOverText();
 
     void draw();
-
     void spawnObj(sf::Time &elapsed);
+    void restartGame();
+
 };
 
 

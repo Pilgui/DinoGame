@@ -10,10 +10,11 @@ unsigned const int Window::ySize = 300;
 
 Window::Window() : window(sf::VideoMode(xSize, ySize), "Dino") ,
                    restartButton(xSize/2,ySize/4,200,50),
-                   isGame(true),isTrueJump(false)
+                   isGame(true),isTrueJump(false),isBirdSpawn(false),isObjSpawned(true)
 {
     dino.setScore(0);
     objectVec.reserve(5);
+    birdVec.reserve(3);
 
     declareScore();
     declareGameOverText();
@@ -24,7 +25,9 @@ Window::Window() : window(sf::VideoMode(xSize, ySize), "Dino") ,
 
 
 void Window::start() {
-    obj.update(objectVec);
+    obj.spawn(objectVec,isObjSpawned);
+    ground.start(groundVec);
+    cloud.start(cloudVec);
 
     const int targetFPS = 60;
     const sf::Time timePerFrame = sf::seconds(1.0f / targetFPS);
@@ -58,15 +61,21 @@ void Window::start() {
             elapsed += clockObj.restart();
             if(isGame){
                 dinoJump();
-                dino.setScore(dino.getScore() + 0.15f);
-                scoreText.setString("Score"+std::to_string((int)dino.getScore()) + "\n" + std::to_string(obj.getObjSpeed()));
-
-                if(dino.getScore() >= 100){
-                    obj.setSpeedObj(dino.getScore() * -0.025f);
-                }
+                ground.update(groundVec);
+                cloud.update(cloudVec);
 
                 spawnObj(elapsed);
-                obj.objectMove(objectVec);
+                obj.objectMove(objectVec,isObjSpawned);
+                bird.update(birdVec,isBirdSpawn);
+
+                dino.setScore(dino.getScore() + 0.35f);
+                scoreText.setString("Score"+std::to_string((int)dino.getScore()));
+
+                if(dino.getScore() >= 100){
+                    obj.setSpeedObj(obj.getObjSpeed() + -0.0005f);
+                    ground.setSpeedGround(obj.getObjSpeed() + -0.0005f);
+                    bird.setSpeedCloud(obj.getObjSpeed() + -0.0005f);
+                }
 
                 onCollision();
             }
@@ -79,29 +88,49 @@ void Window::start() {
 }
 
 void Window::spawnObj(sf::Time &elapsed) {
-    if (dino.getScore() < 100) {
+    if (dino.getScore() < 500) {
         if (elapsed >= sf::seconds(2.5)) {
-            obj.update(objectVec);
+            isObjSpawned = true;
+            obj.spawn(objectVec,isObjSpawned);
             elapsed = sf::Time::Zero;
         }
-    }else if(dino.getScore() >= 100 && dino.getScore() < 200){
+    }else if(dino.getScore() >= 500 && dino.getScore() < 1500){
         if(elapsed >= sf::seconds(2)){
-            obj.update(objectVec);
-            elapsed = sf::Time::Zero;
+            int randNum = rand()%5 + 1;
+            if(randNum <= 3){
+                isObjSpawned = true;
+                obj.spawn(objectVec,isObjSpawned);
+                elapsed = sf::Time::Zero;
+            } else{
+                isBirdSpawn = true;
+                bird.spawn(birdVec,isBirdSpawn);
+                elapsed = sf::Time::Zero;
+            }
         }
-    } else if (dino.getScore() >= 200){
+    } else if (dino.getScore() >= 1500){
         if(elapsed >= sf::seconds(1.5)){
-            obj.update(objectVec);
-            elapsed = sf::Time::Zero;
+            int randNum = rand()%5 + 1;
+            if(randNum <= 3){
+                isObjSpawned = true;
+                obj.spawn(objectVec,isObjSpawned);
+                elapsed = sf::Time::Zero;
+            } else{
+                isBirdSpawn = true;
+                bird.spawn(birdVec,isBirdSpawn);
+                elapsed = sf::Time::Zero;
+            }
         }
     }
 }
 
 void Window::draw() {
     if(isGame) {
+        cloud.draw(window,cloudVec);
         window.draw(dino.getSprite());
         window.draw(scoreText);
-        obj.draw(window, objectVec);
+        obj.draw(window, objectVec,isObjSpawned);
+        ground.draw(window, groundVec);
+        bird.draw(window,birdVec, isBirdSpawn);
     } else{
         window.draw(gameOverText);
         window.draw(scoreText);
@@ -111,10 +140,9 @@ void Window::draw() {
 
 
 void Window::onCollision() {
-    //obj size x = 30  y = 60
-    //dino size x = 20 y = 40
     for (int i = 0; i < objectVec.size(); ++i) {
-        if(dino.getSprite().getGlobalBounds().intersects(objectVec[i].getSprite().getGlobalBounds())){
+        if(dino.getSprite().getGlobalBounds().intersects(objectVec[i].getSprite().getGlobalBounds()) ||
+                dino.getSprite().getGlobalBounds().intersects(birdVec[i].getSprite().getGlobalBounds())){
             isGame = false;
         }
     }
