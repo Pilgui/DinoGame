@@ -141,8 +141,12 @@ void Window::draw() {
 
 void Window::onCollision() {
     for (int i = 0; i < objectVec.size(); ++i) {
-        if(dino.getSprite().getGlobalBounds().intersects(objectVec[i].getSprite().getGlobalBounds()) ||
-                dino.getSprite().getGlobalBounds().intersects(birdVec[i].getSprite().getGlobalBounds())){
+        if(dino.getSprite().getGlobalBounds().intersects(objectVec[i].getSprite().getGlobalBounds())){
+            isGame = false;
+        }
+    }
+    for (int i = 0; i < birdVec.size(); ++i) {
+        if(dino.getSprite().getGlobalBounds().intersects(birdVec[i].getSprite().getGlobalBounds())){
             isGame = false;
         }
     }
@@ -160,8 +164,12 @@ void Window::dinoJump() {
 }
 void Window::restartGame() {
     isGame = true;
+    isTrueJump = false;
     dino.setScore(0);
     obj.reset(objectVec);
+    cloud.reset(cloudVec);
+    bird.reset(birdVec,isBirdSpawn);
+    isBirdSpawn = false;
     dino.setPosition(window.getSize().x-450,window.getSize().y/2);
 }
 

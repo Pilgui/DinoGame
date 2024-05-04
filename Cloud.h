@@ -14,6 +14,7 @@ public:
     void start(std::vector<Cloud>& cloudVec);
     void draw(sf::RenderWindow& window, std::vector<Cloud> &cloudVec);
     void update(std::vector<Cloud>& cloudVec);
+    void reset(std::vector<Cloud>& cloudVec);
 private:
     sf::Sprite sprite;
     sf::Texture texture;

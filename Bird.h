@@ -16,6 +16,7 @@ public:
     void update(std::vector<Bird>& birdVec, bool& isSpawned);
     void setSpeedCloud(float spd);
     sf::Sprite getSprite();
+    void reset(std::vector<Bird>& birdVec, bool& isSpawned) ;
 private:
     sf::Sprite sprite;
     sf::Texture texture;

@@ -56,3 +56,10 @@ void Bird::setSpeedCloud(float spd) {
 sf::Sprite Bird::getSprite() {
     return sprite;
 }
+
+void Bird::reset(std::vector<Bird> &birdVec, bool& isSpawned) {
+    if (isSpawned) {
+        birdVec.erase(birdVec.begin(), birdVec.end());
+    }
+}
+

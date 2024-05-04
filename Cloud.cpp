@@ -43,5 +43,10 @@ void Cloud::update(std::vector<Cloud>& cloudVec) {
     }
 }
 
+void Cloud::reset(std::vector<Cloud> &cloudVec) {
+
+    cloudVec[0].sprite.setPosition(550,50);
+}
+
 
 
