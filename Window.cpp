@@ -193,7 +193,7 @@ void Window::declareGameOverText() {
     gameOverText.setFillColor(sf::Color::Black);
     gameOverText.setPosition(window.getSize().x / 2, window.getSize().y / 2);
 }
-//
+
 
 
 int Window::getXSize(){
